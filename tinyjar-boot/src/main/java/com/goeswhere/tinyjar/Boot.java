@@ -1,5 +1,7 @@
 package com.goeswhere.tinyjar;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.net.URLClassLoader;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
+import java.util.jar.Pack200.Unpacker;
 
 import lzma.sdk.lzma.Decoder;
 import lzma.streams.LzmaInputStream;
@@ -22,7 +25,7 @@ public class Boot {
 		final File tmp = File.createTempFile("data", ".jar");
 		tmp.deleteOnExit();
 
-		System.out.println("Unpacking to: " + tmp.getAbsolutePath() + "...");
+		System.out.print("Unpacking to: " + tmp.getAbsolutePath() + ".");
 
 		final FileOutputStream fos = new FileOutputStream(tmp);
 		try {
@@ -32,7 +35,15 @@ public class Boot {
 				try {
 					final LzmaInputStream in = new LzmaInputStream(data, new Decoder());
 					try {
-						Pack200.newUnpacker().unpack(in, jos);
+						final Unpacker unpacker = Pack200.newUnpacker();
+						unpacker.addPropertyChangeListener(new PropertyChangeListener() {
+							public void propertyChange(PropertyChangeEvent evt) {
+								if (!Unpacker.PROGRESS.equals(evt.getPropertyName()))
+									return;
+								System.out.print(".");
+							}
+						});
+						unpacker.unpack(in, jos);
 					} finally {
 						in.close();
 					}
