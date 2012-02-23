@@ -34,7 +34,7 @@ public class Packager {
 			mainAttributes.putValue("Manifest-Version", "1.0");
 			mainAttributes.putValue("Main-Class", "com.goeswhere.tinyjar.Boot");
 		}
-		final JarOutputStream jos = new JarOutputStream(new FileOutputStream(inFile.getAbsolutePath() + ".jar"), mf);
+		final JarOutputStream jos = new JarOutputStream(new FileOutputStream(newNameFor(inFile).getAbsolutePath()), mf);
 		try {
 			final InputStream boot = Packager.class.getResourceAsStream("/tinyjar-boot.jar");
 			final JarInputStream jis = new JarInputStream(boot);
@@ -81,6 +81,16 @@ public class Packager {
 		}
 
 		System.out.println("Done.");
+	}
+
+	static File newNameFor(File inFile) {
+		final String name = inFile.getName();
+		final int dot = name.lastIndexOf('.');
+		final String parent = inFile.getParent();
+		if (-1 == dot)
+			return new File(parent, name + "-tiny.jar");
+
+		return new File(parent, name.substring(0, dot) + "-tiny" + name.substring(dot));
 	}
 
 	public static long copy(InputStream from, OutputStream to) throws IOException {
