@@ -20,6 +20,8 @@ public class Boot {
 			NoSuchMethodException, SecurityException, ClassNotFoundException, IOException {
 
 		final File tmp = File.createTempFile("data", ".jar");
+		tmp.deleteOnExit();
+
 		System.out.println("Unpacking to: " + tmp.getAbsolutePath() + "...");
 
 		final FileOutputStream fos = new FileOutputStream(tmp);
