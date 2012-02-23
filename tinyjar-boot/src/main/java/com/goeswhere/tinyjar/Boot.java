@@ -2,7 +2,10 @@ package com.goeswhere.tinyjar;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.jar.JarFile;
@@ -13,7 +16,9 @@ import lzma.sdk.lzma.Decoder;
 import lzma.streams.LzmaInputStream;
 
 public class Boot {
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException, IOException {
+
 		final File tmp = File.createTempFile("data", ".jar");
 		System.out.println("Unpacking to: " + tmp.getAbsolutePath() + "...");
 
@@ -54,7 +59,9 @@ public class Boot {
 		callMain(args, tmp, mainClass);
 	}
 
-	static void callMain(String[] args, final File url, final String mainClass) throws Exception {
+	static void callMain(String[] args, final File url, final String mainClass) throws MalformedURLException,
+			IllegalAccessException, InvocationTargetException, NoSuchMethodException, SecurityException,
+			ClassNotFoundException {
 		final URLClassLoader cl = new URLClassLoader(new URL[] { url.toURI().toURL() }, Boot.class.getClassLoader()) {
 			@Override
 			protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
