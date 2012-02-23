@@ -50,27 +50,24 @@ public class Packager {
 			try {
 				final JarInputStream jarIn = new JarInputStream(fis);
 				try {
+					final LzmaOutputStream lzma = new LzmaOutputStream.Builder(jos).build();
 					try {
-						final LzmaOutputStream lzma = new LzmaOutputStream.Builder(jos).build();
-						try {
-							final Packer packer = Pack200.newPacker();
-							packer.addPropertyChangeListener(new PropertyChangeListener() {
-								public void propertyChange(PropertyChangeEvent evt) {
-									if (!Packer.PROGRESS.equals(evt.getPropertyName()))
-										return;
-									final String val = String.valueOf(evt.getNewValue());
-									System.err.printf("jar200: %3s%% complete..\n", val);
+						final Packer packer = Pack200.newPacker();
+						packer.addPropertyChangeListener(new PropertyChangeListener() {
+							public void propertyChange(PropertyChangeEvent evt) {
+								if (!Packer.PROGRESS.equals(evt.getPropertyName()))
+									return;
+								final String val = String.valueOf(evt.getNewValue());
+								System.err.printf("jar200: %3s%% complete..\n", val);
 
-									if ("100".equals(val))
-										System.err.println("Awaiting lzma completion...");
-								}
-							});
-							packer.pack(jarIn, lzma);
-						} finally {
-							lzma.flush();
-							lzma.close();
-						}
+								if ("100".equals(val))
+									System.err.println("Awaiting lzma completion...");
+							}
+						});
+						packer.pack(jarIn, lzma);
 					} finally {
+						lzma.flush();
+						lzma.close();
 					}
 				} finally {
 					jarIn.close();
