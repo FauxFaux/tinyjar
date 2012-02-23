@@ -1,6 +1,8 @@
 .classpath
 .project
 .settings
+*.iml
+*.ipr
+*.iws
 target
-*.db
-db-*.log
+tinyjar-package/src/main/resources/tinyjar-boot.jar
