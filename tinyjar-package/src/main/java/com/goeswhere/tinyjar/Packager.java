@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -27,8 +28,12 @@ public class Packager {
 		}
 
 		final File inFile = new File(args[0]);
-
 		final Manifest mf = new Manifest();
+		{
+			final Attributes mainAttributes = mf.getMainAttributes();
+			mainAttributes.putValue("Manifest-Version", "1.0");
+			mainAttributes.putValue("Main-Class", "com.goeswhere.tinyjar.Boot");
+		}
 		final JarOutputStream jos = new JarOutputStream(new FileOutputStream(inFile.getAbsolutePath() + ".jar"), mf);
 		try {
 			final InputStream boot = Packager.class.getResourceAsStream("/tinyjar-boot.jar");
