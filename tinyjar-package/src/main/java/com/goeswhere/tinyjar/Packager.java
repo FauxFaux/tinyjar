@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +19,7 @@ import java.util.zip.ZipEntry;
 import lzma.streams.LzmaOutputStream;
 
 public class Packager {
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws IOException {
 		if (args.length != 1 || (args.length != 0 && (args[0].equals("--help") || args[0].equals("-h")))) {
 			System.err.println("usage: jarfile");
 			System.exit(1);

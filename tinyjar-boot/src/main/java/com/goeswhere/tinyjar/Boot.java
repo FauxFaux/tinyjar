@@ -20,7 +20,7 @@ import lzma.streams.LzmaInputStream;
 
 public class Boot {
 	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, ClassNotFoundException, IOException {
+			NoSuchMethodException, ClassNotFoundException, IOException {
 
 		final File tmp = File.createTempFile("data", ".jar");
 		tmp.deleteOnExit();
@@ -73,8 +73,7 @@ public class Boot {
 	}
 
 	static void callMain(String[] args, final File url, final String mainClass) throws MalformedURLException,
-			IllegalAccessException, InvocationTargetException, NoSuchMethodException, SecurityException,
-			ClassNotFoundException {
+			IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
 		final URLClassLoader cl = new URLClassLoader(new URL[] { url.toURI().toURL() }, Boot.class.getClassLoader()) {
 			@Override
 			protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
